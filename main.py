@@ -95,12 +95,24 @@ async def cantidad_filmaciones_dia(dia: str):
 async def score_titulo(titulo: str):
     movie = movies_df[movies_df['TITLE'].str.contains(titulo, case=False, na=False)]
     if not movie.empty:
-        # Verificar si RELEASE_DATE no es nulo y es una cadena antes de extraer el año
-        release_year = movie.iloc[0]['RELEASE_DATE'][:4] if pd.notna(movie.iloc[0]['RELEASE_DATE']) else "Desconocido"
+        release_date = movie.iloc[0]['RELEASE_DATE']
+        # Verificar si RELEASE_DATE no es nulo y manejar datetime o string adecuadamente
+        if pd.notna(release_date):
+            if isinstance(release_date, str) and len(release_date) >= 4:
+                release_year = release_date[:4]
+            elif isinstance(release_date, pd.Timestamp):
+                release_year = release_date.year
+            else:
+                release_year = "Desconocido"
+        else:
+            release_year = "Desconocido"
+        
         popularity = movie.iloc[0]['POPULARITY'] if pd.notna(movie.iloc[0]['POPULARITY']) else "Desconocido"
+        
         return {
             "message": f"La película {titulo} fue estrenada en el año {release_year} con un score/popularidad de {popularity}"
         }
+    
     return {"message": "Película no encontrada"}
 
 @app.get("/votos_titulo/{titulo}")
@@ -109,7 +121,17 @@ async def votos_titulo(titulo: str):
     if not movie.empty:
         vote_count = movie.iloc[0]['VOTE_COUNT'] if pd.notna(movie.iloc[0]['VOTE_COUNT']) else 0
         vote_average = movie.iloc[0]['VOTE_AVERAGE'] if pd.notna(movie.iloc[0]['VOTE_AVERAGE']) else "Desconocido"
-        release_year = movie.iloc[0]['RELEASE_DATE'][:4] if pd.notna(movie.iloc[0]['RELEASE_DATE']) else "Desconocido"
+        
+        release_date = movie.iloc[0]['RELEASE_DATE']
+        if pd.notna(release_date):
+            if isinstance(release_date, str) and len(release_date) >= 4:
+                release_year = release_date[:4]
+            elif isinstance(release_date, pd.Timestamp):
+                release_year = release_date.year
+            else:
+                release_year = "Desconocido"
+        else:
+            release_year = "Desconocido"
         
         if vote_count >= 2000:
             return {
@@ -118,8 +140,8 @@ async def votos_titulo(titulo: str):
             }
         else:
             return {"message": "Película no encontrada o menos de 2000 valoraciones"}
+    
     return {"message": "Película no encontrada"}
-
 @app.get("/get_actor/{nombre_actor}")
 async def get_actor(nombre_actor: str):
     # Buscar en cast_df para obtener los datos del actor
