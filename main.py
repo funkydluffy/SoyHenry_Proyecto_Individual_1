@@ -1,13 +1,54 @@
 from fastapi import FastAPI, HTTPException
 from typing import Optional
 import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Cargar los datasets
 movies_df = pd.read_csv('movies_reducido.csv')
 cast_df = pd.read_csv('df_cast_expanded.csv')
 crew_df = pd.read_csv('filtered_credits_crew.csv')
+df_movies_released = pd.read_csv('movies_released.csv')
 
 app = FastAPI()
+
+# Convertir las columnas de texto a minúsculas para uniformidad
+df_movies_released['TITLE'] = df_movies_released['TITLE'].str.lower()
+df_movies_released['GENRES_NAME'] = df_movies_released['GENRES_NAME'].str.lower()
+df_movies_released['ORIGINAL_LANGUAGE'] = df_movies_released['ORIGINAL_LANGUAGE'].str.lower()
+df_movies_released['PRODUCTION_COUNTRIES_NAME'] = df_movies_released['PRODUCTION_COUNTRIES_NAME'].str.lower()
+
+# Crear una columna que combine todas las características relevantes para la recomendación
+df_movies_released['combined_features'] = df_movies_released.apply(
+    lambda row: f"{row['REVENUE']} {row['BUDGET']} {row['RETURN']} {row['TITLE']} {row['GENRES_NAME']} {row['ORIGINAL_LANGUAGE']} {row['PRODUCTION_COUNTRIES_NAME']} {row['VOTE_AVERAGE']}",
+    axis=1
+)
+
+# Vectorizar las características combinadas usando TfidfVectorizer
+vectorizer = TfidfVectorizer()
+feature_vectors = vectorizer.fit_transform(df_movies_released['combined_features'])
+
+@app.get("/recomendacion/{titulo}")
+async def recomendacion(titulo: str, num_recommendations: int = 5):
+    # Convertir el título a minúsculas para uniformidad
+    titulo = titulo.lower()
+
+    # Encontrar el índice de la película dada
+    try:
+        movie_idx = df_movies_released[df_movies_released['TITLE'] == titulo].index[0]
+    except IndexError:
+        raise HTTPException(status_code=404, detail="La película no fue encontrada en la base de datos")
+
+    # Calcular la similitud del coseno entre la película dada y todas las demás
+    cosine_similarities = cosine_similarity(feature_vectors[movie_idx], feature_vectors).flatten()
+
+    # Obtener los índices de las películas más similares, excluyendo la película dada
+    similar_indices = cosine_similarities.argsort()[-num_recommendations-1:-1][::-1]
+
+    # Obtener los títulos de las películas recomendadas
+    similar_movies = df_movies_released.iloc[similar_indices]['TITLE'].tolist()
+
+    return {"message": f"Películas recomendadas similares a {titulo}: {similar_movies}"}
 
 @app.get("/cantidad_filmaciones_mes/{mes}")
 async def cantidad_filmaciones_mes(mes: str):
