@@ -211,6 +211,6 @@ async def get_director(nombre_director: str):
         # Convertimos la información de las películas a un formato de diccionario para su retorno
         movies_list = movies_info.to_dict(orient='records')
         # Devolvemos un mensaje con la lista de películas dirigidas por el director
-        return {f"El director {nombre_director} ha dirigido las siguientes películas:", "movies": movies_list}
+        return {f"El director {nombre_director} ha dirigido las siguientes películas: {movies_list}"}
     # Si no se encuentra el director, devolvemos un mensaje indicando que no fue encontrado
     return {"Director no encontrado"}
