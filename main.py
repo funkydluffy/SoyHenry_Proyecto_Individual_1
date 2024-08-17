@@ -5,10 +5,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Cargar los datasets
-movies_df = pd.read_csv('movies_reducido.csv')
-cast_df = pd.read_csv('df_cast_expanded.csv')
-crew_df = pd.read_csv('filtered_credits_crew.csv')
-df_movies_released = pd.read_csv('movies_released.csv')
+movies_df = pd.read_csv('Datasets/movies_reducido.csv')
+cast_df = pd.read_csv('Datasets/df_cast_expanded.csv')
+crew_df = pd.read_csv('Datasets/filtered_credits_crew.csv')
+df_movies_released = pd.read_csv('Datasets/movies_released.csv')
 
 app = FastAPI()
 
