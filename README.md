@@ -1,4 +1,4 @@
-# GUIA: SISTEMA DE RECOMENDACION EN FASTAPI
+# GUIA: SISTEMA DE RECOMENDACION EN FASTAPI+RENDER
 
 En este repositorio vamos a seguir paso a paso una guía para montar un modelo de machine learning que nos pidieron. Este modelo debe darnos recomendaciones de películas en base a una película elegida. En este contexto específico, nos piden que tengamos en cuenta el tiempo que tardamos, priorizando la velocidad a la perfección.
 
