@@ -41,6 +41,6 @@ Este mismo está desarrollado en nuestro main.py y se puede acceder por medio de
 
 Espero que toda esta guia y documentación se fácil de entender y que pueda ayudar a cualquiera con los conocimientos necesarios a poder desarrollar este proyecto.
 
-Este proyecto fué realizado por Gabriel Coria: (https://soyhenry-proyecto-individual-1.onrender.com/docs)
+Este proyecto fué realizado por Gabriel Coria. (https://www.linkedin.com/in/coriagabriel/)
 El pedido del proyecto está hecho por SoyHenry con el objetivo de poner en práctica los conocimientos adquiridos en el bootcamp de Data Science. (https://www.linkedin.com/school/henryok)
 
