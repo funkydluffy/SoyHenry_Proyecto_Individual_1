@@ -20,7 +20,7 @@ df_movies_released['PRODUCTION_COUNTRIES_NAME'] = df_movies_released['PRODUCTION
 
 # Creamos una columna que combine todas las características relevantes para la recomendación
 df_movies_released['combined_features'] = df_movies_released.apply(
-    lambda row: f"{row['REVENUE']} {row['BUDGET']} {row['RETURN']} {row['TITLE']} {row['GENRES_NAME']} {row['ORIGINAL_LANGUAGE']} {row['PRODUCTION_COUNTRIES_NAME']} {row['VOTE_AVERAGE']}",
+    lambda row: f"{row['REVENUE']} {row['BUDGET']} {row['RETURN']} {row['GENRES_NAME']} {row['ORIGINAL_LANGUAGE']} {row['PRODUCTION_COUNTRIES_NAME']} {row['VOTE_AVERAGE']}",
     axis=1
 )
 
